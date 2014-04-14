@@ -1,0 +1,42 @@
+#include<stdio.h>
+int a[1000001];
+int gcd(int a, int b)
+{
+	if (b==0)
+		return a;
+	else
+		return gcd(b,a%b);
+}
+int main()
+{
+	int i,j,calc,t,c,d,e,n,ans;
+	scanf("%d",&t);
+	while(t--)
+	{
+		scanf("%d %d",&c,&d);
+		e=gcd(c,d);
+		e=(c*d)/e;
+		n=e/c;
+		for(i=0;i<=n;i++)
+		{
+			calc=c*i;
+			for(j=0;calc+j<=e;j+=d)
+			{
+				printf("%d\n",j);
+				a[j]=1;
+			}
+		}
+		for(i=e;i>=0;i--)
+		{
+			if(a[i]==0)
+			{
+				ans=i;
+				break;
+			}
+			if(a[i]==1)
+				a[i]==0;
+		}
+		printf("%d\n",ans);
+	}
+	return 0;
+}

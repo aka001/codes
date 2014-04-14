@@ -1,0 +1,12 @@
+def isperfect(x):
+	s=sqrt(x)
+	return (s*s==x)
+def isfibo(n):
+	return (isperfect(5*n*n+4) or isperfect(5*n*n-4))
+t=input()
+for i in range(0,t):
+	n=input()
+	if isfibo(n):
+		print "YES"
+	else:
+		print "NO"
