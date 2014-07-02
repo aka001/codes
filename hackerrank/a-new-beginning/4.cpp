@@ -105,26 +105,6 @@ ll powerit(ll a, ll b)
 char buffer[1000];
 bool mem[50][200];
 ll dp[50][200];
-ll f(int dig, int sum)
-{
-	int i;
-	if(dig==0)
-		return (ll)sum==0;
-	if(mem[dig][sum])
-	{
-		//printf("hie dig=%d sum=%d dp=%d\n",dig,sum,dp[dig][sum]);
-		return dp[dig][sum];
-	}
-	mem[dig][sum]=1;
-	ll ret=0;
-	rep(i,10)
-	{
-		if(sum-i>=0)
-			ret+=f(dig-1,sum-i);
-	}
-	dp[dig][sum]=ret;
-	return ret;
-}
 vector<int> kmh;
 ll solve(ll x,ll sum)
 {
@@ -143,7 +123,7 @@ ll solve(ll x,ll sum)
 			{
 				sum=kmh[k]-xit;
 				if(sum-j>=0)
-				ansit+=f(quad,sum-j);
+				ansit+=dp[quad][sum-j];
 			}
 		}
 		xit+=val;
@@ -162,7 +142,7 @@ bool istrue(ll x,ll sum1)
 }
 int main()
 {
-	ll x,y,sum1,ans=0,sum,s1,s2,s3,sqrtit,i,j,num,sizeit,calc,t;
+	ll x,y,sum1,ans=0,sum,s1,s2,s3,sqrtit,i,j,num,sizeit,calc,t,k;
 	seive();
 	rep(i,150)
 	{
@@ -184,6 +164,19 @@ int main()
 			calc+=num;
 		if(calc!=0 && ((calc)&(calc-1))==0)
 			kmh.pb(i);
+	}
+	dp[0][0]=1;
+	for(i=0;i<=9;i++)dp[1][i]=1;
+	for(i=2;i<=16;i++)
+	{
+		for(j=0;j<=135;j++)
+		{
+			for(k=0;k<=9;k++)
+			if(j-k>=0)
+			{
+				dp[i][j]+=dp[i-1][j-k];
+			}
+		}
 	}
 	sl(t);
 	sizeit=kmh.size();
