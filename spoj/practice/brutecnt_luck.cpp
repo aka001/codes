@@ -1,8 +1,8 @@
 /*******************
-  Akash Agrawall
-  IIIT HYDERABAD
-  akash.agrawall094@gmail.com
- ***********************/
+  	Akash Agrawall
+	IIIT HYDERABAD
+	akash.agrawall094@gmail.com
+	***********************/
 
 
 #include<cstdio>
@@ -50,7 +50,7 @@ using namespace std;
 #define ss(n) scanf("%s",n)
 #define scan(v,n) vector<int> v;rep(i,n){ int j;si(j);v.pb(j);}
 #define mod (int)(1e9 + 7)
-
+ 
 long long int gcd(long long int a,long long int b)
 {
 	long long int c;
@@ -62,6 +62,7 @@ long long int gcd(long long int a,long long int b)
 	}
 	return b;
 }
+
 void seive()
 {
 	int i,j;
@@ -75,9 +76,9 @@ void seive()
 		if (!isprime[i]) 
 		{
 			for (j = i * i; j < MAX; j += 2 * i)
-			{
-				isprime[j] = 1; 
-			}
+				{
+					isprime[j] = 1; 
+				}
 		}
 	}
 }
@@ -99,102 +100,35 @@ ll powerit(ll a, ll b)
 	}
 	return x;
 }
-char buffer[1000];
-bool mem[50][200];
-ll dp[500][200];
-vector<int> lucky;
-ll solve(ll x,ll sum)
+int findit(int n)
 {
-	int sizeit=0,i,quad,j,val,hmm,k,temp;
-	ll ansit=0,xit=0;
-	while(x!=0)
+	int flagit=1;
+	if(n==0)
+		return n;
+	while(n!=0)
 	{
-		buffer[sizeit++]=x&01;
-		x>>=1;
-	}
-	rep(i,sizeit/2)
-	{
-		temp=buffer[i];
-		buffer[i]=buffer[sizeit-i-1];
-		buffer[sizeit-i-1]=temp;
-	}
-	quad=sizeit;
-	hmm=lucky.size();
-	rep(i,sizeit)
-	{
-		quad--;
-		val=buffer[i];
-		//printf("val=%d i=%d\n",val,i);
-		for(j=0;j<val;j++)
+		if(n%10!=4 && n%10!=7)
 		{
-			rep(k,hmm)
-			{
-				sum=lucky[k]-xit;
-				if(sum-j>=0)
-					ansit+=dp[quad][sum-j];
-			}
-			//printf("ansit=%lld\n",ansit);
+			flagit=0;
+			break;
 		}
-		xit+=val;
+		n/=10;
 	}
-	return ansit;
-}
-bool istrue(ll x,ll sum1)
-{
-	int i,calc=0;
-	while(x!=0)
-	{
-		calc+=x%10;
-		x/=10;
-	}
-	return calc==sum1;
+	return flagit;
 }
 int main()
 {
-	ll x,y,sum1,ans=0,sum,s1,s2,s3,sqrtit,i,j,num,sizeit,calc,t,k;
-	lucky.pb(4);
-	lucky.pb(7);
-	lucky.pb(44);
-	lucky.pb(47);
-	lucky.pb(74);
-	lucky.pb(77);
-	dp[0][0]=1;
-	dp[1][0]=1;
-	dp[1][1]=1;
-	for(i=2;i<=60;i++)
-		dp[1][i]=0;
-	for(i=2;i<=60;i++)
+	int i;
+	rep(i,200)
 	{
-		for(j=0;j<=100;j++)
-		{
-			for(k=0;k<=1;k++)
-			{
-				if(j-k>=0)
-				{
-					dp[i][j]+=dp[i-1][j-k];
-				}
-				else 
-					break;
-			}
-		}
-	}
-	sl(t);
-	while(t--)
-	{
-		ans=0;
-		sl(x);
-		sl(y);
-		sum=0;
-		sum1=sum;
-		s1=solve(y+1,sum);
-		s2=solve(x,sum);
-		//s3=istrue(y,sum);
-		//printf("s1=%lld s2=%lld\n",s1,s2);
-		ans+=s1-s2;
-		pln(ans);
+		if(findit(i))
+			printf("%d\n",i);
 	}
 	return 0;
 }
+
+
+
 
 
 

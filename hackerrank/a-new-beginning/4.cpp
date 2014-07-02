@@ -188,7 +188,8 @@ int main()
 		sum1=sum;
 		s1=solve(y+1,sum);
 		s2=solve(x,sum);
-		s3=istrue(y,sum);
+		//s3=istrue(y,sum);
+
 		ans+=s1-s2;
 		pln(ans);
 	}
