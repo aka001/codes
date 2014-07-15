@@ -1,11 +1,10 @@
 import random
 import string
-t=20
+t=100
 print t
 for i in range(0,t):
-	length=random.randint(1,6)
-	strit=''
-	for j in range(0,length):
-		char=random.choice(string.letters)
-		strit+=char
-	print strit
+	b=1000000000
+	a=b-1
+	#a=random.randint(0,1000000000)
+	#b=random.randint(a,1000000000)
+	print a,b
