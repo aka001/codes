@@ -100,119 +100,46 @@ ll powerit(ll a, ll b)
 	}
 	return x;
 }
-char arr[100000];
-ll n;
-ll findmod(string ch)
-{
-	int i=0,lenit=ch.length();
-	ll calc=0;
-	rep(i,lenit)
-	{
-		calc=calc*10+ch[i]-'0';
-		calc%=n;
-	}
-	calc%=n;
-	return calc;
-}
-int visited[1000009];
-void printit(string ch)
-{
-	int i,lenit=ch.length();
-	rep(i,lenit)
-		printf("%c",ch[i]);
-	printf("\n");
-}
-ll getlong()
-{
-	ll calc=0;
-	char ch;
-	ch=getchar();
-	while(ch!=' ' && ch!='\0' && ch!='\n')
-	{
-		calc=calc*10+ch-'0';
-		ch=getchar();
-	}
-	return calc;
-}
-void recurseit(string strit, int modit)
-{
 
-}
 int main()
 {
-	int k,i;
-	ll modit,calc,calc1,flagit,ans,binit,binit1;
-	char chit;
-	si(k);
-	chit=getchar();
-	while(k--)
+	ll x,y,z,n,calc,ans;
+	int signit=1;
+	sl(x);
+	sl(y);
+	z=y-x;
+	z+=mod;
+	z%=mod;
+	sl(n);
+	calc=n/3;
+	if(calc*3==n)
+		calc--;
+	if(calc%2==1)
 	{
-		queue< pair<int,int> > numbers;
-		n=getlong();
-		calc=n;
-		while(calc!=0)
-		{
-			calc1=calc%10;
-			if(calc1!=1 && calc1!=0)
-			{
-				flagit=0;
-				break;
-			}
-			calc/=10;
-		}
-		if(flagit==1)
-		{
-			printf("%lld\n",n);
-			continue;
-		}
-		
-		numbers.push(mp(1,1));
-		rep(i,n)
-			visited[i]=0;
-		visited[1]=1;
-		while(!numbers.empty())
-		{
-			binit=numbers.front().first;
-			binit1=binit*2;
-			modit=(numbers.front().second*10)%n;
-			numbers.pop();
-			if(modit==0)
-			{
-				ans=binit1;
-				break;
-			}
-			else if(visited[modit]==0)
-			{
-				numbers.push(mp(binit1,modit));
-				//printit(strit1);
-				//printf("modit=%lld visited[modit]=%d sizeit=%d\n",modit,visited[modit],(int)numbers.size());
-				visited[modit]=1;
-			}
-			binit1=binit1+1;
-			modit=modit+1;
-			if(modit==0 || modit==n)
-			{
-				ans=binit1;
-				break;
-			}
-			else if(visited[modit]==0)
-			{
-				numbers.push(mp(binit1,modit));
-				//printit(strit1);
-				//printf("modit=%lld visited[modit]=%d sizeit=%d\n\n",modit,visited[modit],(int)numbers.size());
-				visited[modit]=1;
-			}
-		}
-		string ansit="";
-		while(ans!=0)
-		{
-			ansit=(char)(ans%2+48)+ansit;
-			ans>>=1;
-		}
-		printit(ansit);
+		signit=-1;
 	}
+	if(n%3==1)
+		ans=signit*x;
+	else if(n%3==2)
+		ans=signit*y;
+	else
+		ans=signit*z;
+	ans+=mod;
+	ans%=mod;
+	pln(ans);
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
