@@ -143,12 +143,11 @@ int main()
 	int k,i;
 	ll modit,calc,calc1,flagit,ans,binit,binit1;
 	char chit;
-	si(k);
-	chit=getchar();
+	k=1;
 	while(k--)
 	{
 		queue< pair<int,int> > numbers;
-		n=getlong();
+		sl(n);
 		calc=n;
 		while(calc!=0)
 		{
