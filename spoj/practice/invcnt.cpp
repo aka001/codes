@@ -101,30 +101,71 @@ ll powerit(ll a, ll b)
 	return x;
 }
 ll inv_count=0;
-int arr[1000000],temp[1000000];
+int arr[1000000],temp[1000000],a[1000006],b[1000006];
 void merge(int left, int mid, int right)
 {
 	int i=left,j=mid+1,k=0;
 	while(i<=mid && j<=right)
 	{
-		if(arr[i]<=arr[j])
+		if(a[i]<=b[j])
 		{
-			temp[k++]=arr[i++];
+			i++;
 		}
 		else
 		{
-			temp[k++]=arr[j++];
-			//printf("i=%d j=%d mid=%d mid-i+1=%d\n",i,j-1,mid,mid-i+1);
+			//printf("left=%d mid=%d right=%d i=%d j=%d a=%d b=%d\n",left,mid,right,i,j,a[i],b[j]);
+			j++;
 			inv_count+=mid-i+1;
 		}
 	}
+	i=left;j=mid+1;k=0;
+	while(i<=mid && j<=right)
+	{
+		if(a[i]<=a[j])
+		{
+			//printf("i=%d a=%d\n",i,a[i]);
+			temp[k++]=a[i++];
+		}
+		else
+		{
+			temp[k++]=a[j++];
+			//printf("i=%d j=%d mid=%d mid-i+1=%d\n",i,j-1,mid,mid-i+1);
+		}
+	}
+	//printf("here left=%d mid=%d right=%d i=%d j=%d a=%d b=%d\n",left,mid,right,i,j,a[i],b[j]);
 	while(i<=mid)
-		temp[k++]=arr[i++];
+		temp[k++]=a[i++];
 	while(j<=right)
-		temp[k++]=arr[j++];
+		temp[k++]=a[j++];
+	/*rep(i,k)
+		printf("%d ",temp[i]);
+	printf("\n");*/
 	k=0;
 	for(i=left;i<=right;i++)
-		arr[i]=temp[k++];
+	{
+		a[i]=temp[k++];
+	}
+	i=left,j=mid+1,k=0;
+	while(i<=mid && j<=right)
+	{
+		if(b[i]<=b[j])
+		{
+			temp[k++]=b[i++];
+		}
+		else
+		{
+			temp[k++]=b[j++];
+			//printf("i=%d j=%d mid=%d mid-i+1=%d\n",i,j-1,mid,mid-i+1);
+		}
+	}
+	while(i<=mid)
+		temp[k++]=b[i++];
+	while(j<=right)
+		temp[k++]=b[j++];
+	k=0;
+	for(i=left;i<=right;i++)
+		b[i]=temp[k++];
+
 }
 void merge_sort(int left,int right)
 {
@@ -146,7 +187,11 @@ int main()
 		si(n);
 		rep(i,n)
 		{
-			si(arr[i]);
+			si(a[i]);
+		}
+		rep(i,n)
+		{
+			si(b[i]);
 		}
 		merge_sort(0,n-1);
 		pln(inv_count);

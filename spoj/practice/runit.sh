@@ -1,9 +1,9 @@
 for i in {1..20000}
 	do
 		python testgenerator.py > in2
-		g++ subst1.cpp
+		g++ rangzer.cpp
 		./a.out < in2 > akash
-		g++ ashish.cpp
+		g++ bruterangzer.cpp
 		./a.out < in2 > output
 		if diff akash output > /dev/null ; then
 			echo same
