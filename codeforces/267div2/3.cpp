@@ -85,8 +85,6 @@ ll recurseit(ll k,ll sum, ll l)
 		else
 			break;
 	}
-	if(l==3 && k==1)
-		printf("l=%lld k=%lld ansit=%lld\n",l,k,ansit);
 	vis[l][k]=1;
 	if(ansit==0)
 		dp[l][k]=0;
