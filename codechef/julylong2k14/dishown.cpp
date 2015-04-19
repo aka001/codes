@@ -100,12 +100,19 @@ ll powerit(ll a, ll b)
 	}
 	return x;
 }
-int chefit[1000009],dish[100009];
-vector<int> arr[1000009];
-int maxit[1000009];
+int arr[1000009],maxit[1000009];
+int findroot(int x)
+{
+	while(x!=arr[x])
+	{
+		arr[x]=arr[arr[x]];
+		x=arr[x];
+	}
+	return x;
+}
 int main()
 {
-	int t,n,i,val,q,x,y,temp,sizeit,j;
+	int t,n,i,q,val,x,y,rootx,rooty,temp;
 	si(t);
 	while(t--)
 	{
@@ -113,61 +120,46 @@ int main()
 		rep(i,n)
 		{
 			si(val);
-			dish[i+1]=val;
-			chefit[val]=i+1;
-			arr[i+1].pb(val);
 			maxit[i+1]=val;
+			arr[i+1]=i+1;
 		}
 		si(q);
 		rep(i,q)
 		{
 			si(val);
-			if(val==1)
+			if(val==0)
 			{
 				si(x);
-				//x=dish[x];
-				pin(chefit[x]);
+				si(y);
+				rootx=findroot(x);
+				rooty=findroot(y);
+				if(rootx==rooty)
+					printf("Invalid query!\n");
+				else
+				{
+					if(maxit[rootx]!=maxit[rooty])
+					{
+						if(maxit[rootx]<maxit[rooty])
+						{
+							temp=rootx;
+							rootx=rooty;
+							rooty=temp;
+						}
+						//printf("rootx=%d rooty=%d x=%d y=%d\n",rootx,rooty,x,y);
+						arr[rooty]=rootx;
+					}
+				}
 			}
 			else
 			{
 				si(x);
-				si(y);
-				//x=dish[x];
-				//y=dish[y];
-				if(chefit[x]==chefit[y])
-					printf("Invalid query!\n");
-				else
-				{
-					if(maxit[chefit[x]]!=maxit[chefit[y]])
-					{
-						if(maxit[chefit[x]]<maxit[chefit[y]])
-						{
-							temp=x;
-							x=y;
-							y=temp;
-						}
-						sizeit=arr[chefit[y]].size();
-						printf("x=%d y=%d chefitx=%d maxitx=%d chefity=%d maxity=%d sizeit=%d\n",x,y,chefit[x],maxit[chefit[x]],chefit[y],maxit[chefit[y]],sizeit);
-						rep(j,sizeit)
-						{
-							//printf("chefit[arr[chefit[y][j]]]=%d arr=%d chefitx=%d\n",chefit[arr[chefit[y]][j]],arr[chefit[y]][j],chefit[x]);
-							chefit[arr[chefit[y]][j]]=chefit[x];
-							arr[chefit[x]].pb(arr[chefit[y]][j]);
-						}
-						sizeit=arr[chefit[x]].size();
-						arr[chefit[y]].erase(arr[chefit[y]].begin(),arr[chefit[y]].end());
-						printf("x=%d y=%d chefitx=%d maxitx=%d chefity=%d maxity=%d sizeit=%d\n\n",x,y,chefit[x],maxit[chefit[x]],chefit[y],maxit[chefit[y]],sizeit);
-					}
-				}
+				rootx=findroot(x);
+				pin(rootx);
 			}
 		}
 	}
 	return 0;
 }
-
-
-
-
 
 
 
