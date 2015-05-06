@@ -31,7 +31,6 @@ using namespace std;
 #define scan(v,n) vector<int> v;rep(i,n){ int j;si(j);v.pb(j);}
 #define mod (int)(1e9 + 7)
 #define ll long long int
-#define MAX 1000006
 #define TRACE
 
 #ifdef TRACE
@@ -53,65 +52,130 @@ using namespace std;
 
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-
-ll arr[100][100],dp1[1<<21],dp2[1<<21],fit[21];
+vector<ll> arr,ans;
+ll findit(ll y)
+{
+	ll low=0,high=arr.size(),mid,sz;
+	sz=arr.size();
+	high=sz-1;
+	while(low<=high)
+	{
+		mid=(low+high)/2;
+		if(arr[mid]>=y && (mid==0 || arr[mid-1]<y))
+			return mid;
+		else if(arr[mid]>y)
+			high=mid-1;
+		else
+			low=mid+1;
+	}
+	return -1;
+}
 int main()
 {
-	ll t,n,i,j,k,sum,cnt,c,ans,calc,cit;
-	sl(t);
-	trace1(t);
-	while(t--)
+	ll n,k,p,x,y,sum=0,i,val,n1,pos,calc,c1,c2,sz,med;
+	sl(n);
+	sl(k);
+	sl(p);
+	sl(x);
+	sl(y);
+	rep(i,k)
 	{
-		rep(i,1<<21)
-			dp1[i]=dp2[i]=0;
-		sl(n);
-		rep(i,n)
+		sl(val);
+		arr.pb(val);
+		sum+=val;
+	}
+	sort(arr.begin(), arr.end());
+	if(k==0)
+	{
+		sum+=y;
+		calc=(n-1)/2;
+		sum+=calc+y*calc;
+		rep(i,calc)
+			ans.pb(1);
+		ans.pb(y);
+		rep(i,calc)
+			ans.pb(y);
+		sz=ans.size();
+		rep(i,sz)
 		{
-			rep(j,n)
+			printf("%lld",ans[i]);
+			if(i!=sz-1)
+				printf(" ");
+			else
+				printf("\n");
+		}
+		
+	}
+	pos=findit(y);
+	//trace1(pos);
+	if(pos==-1)
+	{
+		calc=n-k;
+		sz=arr.size();
+		med=arr[sz-1];
+		sum+=y*calc;
+		trace1(sum);
+		rep(i,calc)
+			arr.pb(y);
+		sz=arr.size();
+		n1=(n+1)/2;
+		n1--;
+		trace4(arr[n1],y,sum,x);
+		if(arr[n1]<y || sum>x)
+			pin(-1);
+		else
+		{
+			rep(i,calc)
 			{
-				sl(arr[i][j]);
+				printf("%lld",y);
+				if(i!=calc-1)
+					printf(" ");
+				else
+					printf("\n");
 			}
 		}
-		rep(i,n)
+		return 0;
+	}
+	calc=k-pos-pos-1;
+	calc=min(calc,k);
+	//trace1(calc);
+	c1=calc;
+	sum+=calc;
+	k-=calc;
+	c2=k;
+	if(c2<0)
+		c2=0;
+	else
+	{
+		rep(i,c2/2)
 		{
-			rep(j,1<<n)
-				dp2[j]=0;
-			rep(j,n)
-			{
-				if(arr[i][j]==0)
-					continue;
-				fit[j]=1;
-				rep(k,1<<n)
-				{
-					cit=1<<j;
-					calc=k&cit;
-					//trace4(i,j,k,calc);
-					if( calc == 0 )
-					{
-						//trace3(i,j,k);
-						cit=1<<j;
-						calc=k|cit;
-						trace5(i,j,k,cit,calc);
-						dp2[k|(1<<j)]+=1+dp1[k];
-					}
-				}
-			}
-			rep(j,1<<n)
-				dp1[j]=dp2[j];
-			ans=0;calc=1;
-		}	
-		rep(j,n)
-		{
-			if(fit[j]==1)
-			{
-				ans+=calc;
-			}
-			calc*=2;
+			ans.pb(1);
+			ans.pb(arr[pos]);
 		}
-		pln(dp1[ans]);
+	}
+	if(sum>x)
+		pin(-1);
+	else
+	{
+		rep(i,c1)
+			ans.pb(1);
+		sort(ans.begin(), ans.end());
+		sz=ans.size();
+		rep(i,sz)
+		{
+			printf("%lld",ans[i]);
+			if(i!=sz-1)
+				printf(" ");
+			else
+				printf("\n");
+		}
 	}
 	return 0;
 }
+
+
+
+
 
 
 

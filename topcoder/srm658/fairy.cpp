@@ -54,64 +54,32 @@ using namespace std;
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
 
-ll arr[100][100],dp1[1<<21],dp2[1<<21],fit[21];
+class GreatFairyWar
+{
+	public:
+	int minHP(vector<int> dps, vector<int> hp)
+	{
+		int sum=0,sz=dps.size(),c1,c2,ans,i;
+		c1=c2=ans=0;
+		rep(i,sz)
+		{
+			c1+=dps[i];
+		}
+		rep(i,sz)
+		{
+			ans+=c1*hp[i];
+			c1-=dps[i];
+		}
+		return ans;
+	}
+};
 int main()
 {
-	ll t,n,i,j,k,sum,cnt,c,ans,calc,cit;
-	sl(t);
-	trace1(t);
-	while(t--)
-	{
-		rep(i,1<<21)
-			dp1[i]=dp2[i]=0;
-		sl(n);
-		rep(i,n)
-		{
-			rep(j,n)
-			{
-				sl(arr[i][j]);
-			}
-		}
-		rep(i,n)
-		{
-			rep(j,1<<n)
-				dp2[j]=0;
-			rep(j,n)
-			{
-				if(arr[i][j]==0)
-					continue;
-				fit[j]=1;
-				rep(k,1<<n)
-				{
-					cit=1<<j;
-					calc=k&cit;
-					//trace4(i,j,k,calc);
-					if( calc == 0 )
-					{
-						//trace3(i,j,k);
-						cit=1<<j;
-						calc=k|cit;
-						trace5(i,j,k,cit,calc);
-						dp2[k|(1<<j)]+=1+dp1[k];
-					}
-				}
-			}
-			rep(j,1<<n)
-				dp1[j]=dp2[j];
-			ans=0;calc=1;
-		}	
-		rep(j,n)
-		{
-			if(fit[j]==1)
-			{
-				ans+=calc;
-			}
-			calc*=2;
-		}
-		pln(dp1[ans]);
-	}
 	return 0;
 }
+
+
+
 
 
 

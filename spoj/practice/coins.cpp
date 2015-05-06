@@ -31,7 +31,6 @@ using namespace std;
 #define scan(v,n) vector<int> v;rep(i,n){ int j;si(j);v.pb(j);}
 #define mod (int)(1e9 + 7)
 #define ll long long int
-#define MAX 1000006
 #define TRACE
 
 #ifdef TRACE
@@ -52,66 +51,50 @@ using namespace std;
 #define trace6(a, b, c, d, e, f)
 
 #endif
+#define MAX (1e6)
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
+ll mem[1000001];
+ll final_answer(ll n)
+{
+	if(n<=MAX && mem[n]!=-1)
+		return mem[n];
+	if(n<=1)
+		return n;
+	ll ans=n,calc;
+	calc=final_answer(n/2)+final_answer(n/3)+final_answer(n/4);
+	ans=max(ans,calc);
+	if(n<=MAX)
+		mem[n]=ans;
+	return ans;
+}
 
-ll arr[100][100],dp1[1<<21],dp2[1<<21],fit[21];
 int main()
 {
-	ll t,n,i,j,k,sum,cnt,c,ans,calc,cit;
-	sl(t);
-	trace1(t);
-	while(t--)
+	string input_line;
+	ll calc=0,i,ans,sz;
+	rep(i,MAX+1)
+		mem[i]=-1;
+	while(cin)
 	{
-		rep(i,1<<21)
-			dp1[i]=dp2[i]=0;
-		sl(n);
-		rep(i,n)
+		calc=0;
+		getline(cin, input_line);
+		sz=input_line.size();
+		if(sz==0)
+			break;
+		rep(i,sz)
 		{
-			rep(j,n)
-			{
-				sl(arr[i][j]);
-			}
+			calc=calc*10+(input_line[i]-'0');
 		}
-		rep(i,n)
-		{
-			rep(j,1<<n)
-				dp2[j]=0;
-			rep(j,n)
-			{
-				if(arr[i][j]==0)
-					continue;
-				fit[j]=1;
-				rep(k,1<<n)
-				{
-					cit=1<<j;
-					calc=k&cit;
-					//trace4(i,j,k,calc);
-					if( calc == 0 )
-					{
-						//trace3(i,j,k);
-						cit=1<<j;
-						calc=k|cit;
-						trace5(i,j,k,cit,calc);
-						dp2[k|(1<<j)]+=1+dp1[k];
-					}
-				}
-			}
-			rep(j,1<<n)
-				dp1[j]=dp2[j];
-			ans=0;calc=1;
-		}	
-		rep(j,n)
-		{
-			if(fit[j]==1)
-			{
-				ans+=calc;
-			}
-			calc*=2;
-		}
-		pln(dp1[ans]);
+		//trace1(calc);
+		ans=final_answer(calc);
+		pln(ans);
 	}
 	return 0;
 }
+
+
+
+
 
 
 

@@ -53,65 +53,46 @@ using namespace std;
 
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-
-ll arr[100][100],dp1[1<<21],dp2[1<<21],fit[21];
+char ch[MAX];
+int arr[MAX];
+int doit(int l, int h)
+{
+	int i,ans=1,sum=0,c1=0,c2;
+	for(i=l;i<=h;i++)
+		sum+=arr[i];
+	for(i=l;i<h;i++)
+	{
+		c1+=arr[i];
+		c2=sum-c1;
+		if(c1<=c2)
+		{
+			ans+=doit(l,i)*doit(i+1,h);
+		}
+	}
+	trace3(l,h,ans);
+	return ans;
+}
 int main()
 {
-	ll t,n,i,j,k,sum,cnt,c,ans,calc,cit;
-	sl(t);
-	trace1(t);
-	while(t--)
+	int ans,sz,i,cnt=0;
+	while(1)
 	{
-		rep(i,1<<21)
-			dp1[i]=dp2[i]=0;
-		sl(n);
-		rep(i,n)
-		{
-			rep(j,n)
-			{
-				sl(arr[i][j]);
-			}
-		}
-		rep(i,n)
-		{
-			rep(j,1<<n)
-				dp2[j]=0;
-			rep(j,n)
-			{
-				if(arr[i][j]==0)
-					continue;
-				fit[j]=1;
-				rep(k,1<<n)
-				{
-					cit=1<<j;
-					calc=k&cit;
-					//trace4(i,j,k,calc);
-					if( calc == 0 )
-					{
-						//trace3(i,j,k);
-						cit=1<<j;
-						calc=k|cit;
-						trace5(i,j,k,cit,calc);
-						dp2[k|(1<<j)]+=1+dp1[k];
-					}
-				}
-			}
-			rep(j,1<<n)
-				dp1[j]=dp2[j];
-			ans=0;calc=1;
-		}	
-		rep(j,n)
-		{
-			if(fit[j]==1)
-			{
-				ans+=calc;
-			}
-			calc*=2;
-		}
-		pln(dp1[ans]);
+		cnt++;
+		ss(ch);
+		if(!(ch[0]>='0' && ch[0]<='9'))
+			break;
+		sz=strlen(ch);
+		rep(i,sz)
+			arr[i]=ch[i]-'0';
+		ans=doit(0,sz-1);
+		printf("%d, %d\n",cnt,ans);
 	}
 	return 0;
 }
+
+
+
+
 
 
 

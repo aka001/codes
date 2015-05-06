@@ -31,7 +31,6 @@ using namespace std;
 #define scan(v,n) vector<int> v;rep(i,n){ int j;si(j);v.pb(j);}
 #define mod (int)(1e9 + 7)
 #define ll long long int
-#define MAX 1000006
 #define TRACE
 
 #ifdef TRACE
@@ -52,66 +51,104 @@ using namespace std;
 #define trace6(a, b, c, d, e, f)
 
 #endif
+#define F first
+#define S second
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
+map<ll,ll> mapit,mpit;
+vector<pair<ll,ll> > arr;
+vector<ll> vec;
+ll sg[1000006];
+//Initializing the segment tree
+void initialize(int node,int b, int e)
+{
+	if(b==e)
+	{
+		sg[node]=0;
+	}
+	else
+	{
+		initialize(2*node,b,(b+e)/2);
+		initialize(2*node+1,(b+e)/2+1,e);
+		sg[node]=sg[2*node]+sg[2*node+1];
+	}
+}
+//Updating the segment tree for the values which are to be deleted/inserted
+inline void update(int node, int b, int e, int ch)
+{
+	if(b==e && b==ch)
+		sg[node]=1;
+	else if(b!=e)
+	{
+		update(2*node, b, (b+e)/2, ch);
+		update(2*node+1, (b+e)/2+1, e, ch);
+		sg[node]=sg[2*node]+sg[2*node+1];
+	}
+}
+//Finding the count of the numbers lesser than a given number
+inline int sumit(int node, int b, int e, int x, int y)
+{
+	if(b>y || e<x)
+		return 0;
+	else if(b>=x && e<=y)
+		return sg[node];
+	else
+	{
+		int p1,p2;
+		p1=sumit(2*node, b, (b+e)/2, x, y);
+		p2=sumit(2*node+1, (b+e)/2+1, e, x, y);
+		return p1+p2;
+	}
+}
 
-ll arr[100][100],dp1[1<<21],dp2[1<<21],fit[21];
 int main()
 {
-	ll t,n,i,j,k,sum,cnt,c,ans,calc,cit;
-	sl(t);
-	trace1(t);
-	while(t--)
+	ll n,i,v1,v2,c1,c2,sz,temp,cit1,cit2,calc;
+	ll ans=0;
+	sl(n);
+	rep(i,n)
 	{
-		rep(i,1<<21)
-			dp1[i]=dp2[i]=0;
-		sl(n);
-		rep(i,n)
-		{
-			rep(j,n)
-			{
-				sl(arr[i][j]);
-			}
-		}
-		rep(i,n)
-		{
-			rep(j,1<<n)
-				dp2[j]=0;
-			rep(j,n)
-			{
-				if(arr[i][j]==0)
-					continue;
-				fit[j]=1;
-				rep(k,1<<n)
-				{
-					cit=1<<j;
-					calc=k&cit;
-					//trace4(i,j,k,calc);
-					if( calc == 0 )
-					{
-						//trace3(i,j,k);
-						cit=1<<j;
-						calc=k|cit;
-						trace5(i,j,k,cit,calc);
-						dp2[k|(1<<j)]+=1+dp1[k];
-					}
-				}
-			}
-			rep(j,1<<n)
-				dp1[j]=dp2[j];
-			ans=0;calc=1;
-		}	
-		rep(j,n)
-		{
-			if(fit[j]==1)
-			{
-				ans+=calc;
-			}
-			calc*=2;
-		}
-		pln(dp1[ans]);
+		sl(v1);sl(v2);
+		arr.pb(mp(v1,v2));
+		vec.pb(v1);
+		vec.pb(v2);
 	}
+	sort(vec.begin(), vec.end());
+	vec.erase(unique(vec.begin(),vec.end()), vec.end());
+	sort(vec.begin(), vec.end());
+	sz=vec.size();
+	rep(i,sz)
+	{
+		mapit[vec[i]]=i;
+		mpit[vec[i]]=i;
+	}
+	rep(i,n)
+	{
+		c1=arr[i].F;
+		c2=arr[i].S;
+		cit1=c1;cit2=c2;
+		c1=mapit[c1];
+		c2=mapit[c2];
+		temp=vec[c1];
+		vec[c1]=vec[c2];
+		vec[c2]=temp;
+		mapit[cit1]=c2;
+		mapit[cit2]=c1;
+	}
+	initialize(1,0,sz-1);
+	rep(i,sz)
+	{
+		calc=vec[i]-sumit(1,0,sz-1,1,vec[i]-1)-1;
+		ans+=calc;
+		trace3(i,calc,vec[i]);
+		update(1,0,sz-1,vec[i]);
+	}
+	pln(ans);
 	return 0;
 }
+
+
+
+
 
 
 

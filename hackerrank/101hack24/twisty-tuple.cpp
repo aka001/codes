@@ -31,7 +31,6 @@ using namespace std;
 #define scan(v,n) vector<int> v;rep(i,n){ int j;si(j);v.pb(j);}
 #define mod (int)(1e9 + 7)
 #define ll long long int
-#define MAX 1000006
 #define TRACE
 
 #ifdef TRACE
@@ -53,65 +52,45 @@ using namespace std;
 
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-
-ll arr[100][100],dp1[1<<21],dp2[1<<21],fit[21];
+vector<int> brr[1005],crr[1005];
+int arr[10006];
 int main()
 {
-	ll t,n,i,j,k,sum,cnt,c,ans,calc,cit;
-	sl(t);
-	trace1(t);
-	while(t--)
+	int n,i,j,sz,ans=0,val,calc,nsz;
+	si(n);
+	rep(i,n)
+		si(arr[i]);
+	rep(i,n)
 	{
-		rep(i,1<<21)
-			dp1[i]=dp2[i]=0;
-		sl(n);
-		rep(i,n)
+		FOR(j,i+1,n)
 		{
-			rep(j,n)
-			{
-				sl(arr[i][j]);
-			}
+			if(arr[j]>arr[i])
+				brr[i].pb(j);
+			if(arr[j]<arr[i])
+				crr[i].pb(j);
 		}
-		rep(i,n)
-		{
-			rep(j,1<<n)
-				dp2[j]=0;
-			rep(j,n)
-			{
-				if(arr[i][j]==0)
-					continue;
-				fit[j]=1;
-				rep(k,1<<n)
-				{
-					cit=1<<j;
-					calc=k&cit;
-					//trace4(i,j,k,calc);
-					if( calc == 0 )
-					{
-						//trace3(i,j,k);
-						cit=1<<j;
-						calc=k|cit;
-						trace5(i,j,k,cit,calc);
-						dp2[k|(1<<j)]+=1+dp1[k];
-					}
-				}
-			}
-			rep(j,1<<n)
-				dp1[j]=dp2[j];
-			ans=0;calc=1;
-		}	
-		rep(j,n)
-		{
-			if(fit[j]==1)
-			{
-				ans+=calc;
-			}
-			calc*=2;
-		}
-		pln(dp1[ans]);
 	}
+	rep(i,n)
+	{
+		sz=brr[i].size();
+		//trace1(i);
+		rep(j,sz)
+		{
+			val=brr[i][j];
+			calc=lower_bound(crr[i].begin(), crr[i].end(), val) - crr[i].begin();
+			nsz=crr[i].size();
+			calc=nsz-calc;
+			//trace3(j,calc,brr[i][j]);
+			ans+=calc;
+		}
+	}
+	pin(ans);
 	return 0;
 }
+
+
+
+
 
 
 

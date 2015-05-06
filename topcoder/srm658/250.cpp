@@ -54,64 +54,54 @@ using namespace std;
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
 
-ll arr[100][100],dp1[1<<21],dp2[1<<21],fit[21];
+class InfiniteString
+{
+	public:
+	int gcd(int a, int b)
+	{
+		if(b==0)
+			return a;
+		return gcd(b, a%b);
+	}
+	public:
+	string equal(string s, string t)
+	{
+		int sz1,sz2,gc,lc,a1,a2,i;
+		string s1,s2;
+		sz1=s.size();
+		sz2=t.size();
+		gc=gcd(sz1,sz2);
+		lc=(sz1*sz2)/gc;
+		//trace4(lc,gc,sz1);
+		a1=lc/sz1;
+		s1="";
+		rep(i,a1)
+		{
+			s1+=s;
+		}
+		s2="";
+		a2=lc/sz2;
+		rep(i,a2)
+		{
+			s2+=t;
+		}
+		if(s1==s2)
+			return "Equal";
+		else
+			return "Not equal";
+	}
+};
 int main()
 {
-	ll t,n,i,j,k,sum,cnt,c,ans,calc,cit;
-	sl(t);
-	trace1(t);
-	while(t--)
-	{
-		rep(i,1<<21)
-			dp1[i]=dp2[i]=0;
-		sl(n);
-		rep(i,n)
-		{
-			rep(j,n)
-			{
-				sl(arr[i][j]);
-			}
-		}
-		rep(i,n)
-		{
-			rep(j,1<<n)
-				dp2[j]=0;
-			rep(j,n)
-			{
-				if(arr[i][j]==0)
-					continue;
-				fit[j]=1;
-				rep(k,1<<n)
-				{
-					cit=1<<j;
-					calc=k&cit;
-					//trace4(i,j,k,calc);
-					if( calc == 0 )
-					{
-						//trace3(i,j,k);
-						cit=1<<j;
-						calc=k|cit;
-						trace5(i,j,k,cit,calc);
-						dp2[k|(1<<j)]+=1+dp1[k];
-					}
-				}
-			}
-			rep(j,1<<n)
-				dp1[j]=dp2[j];
-			ans=0;calc=1;
-		}	
-		rep(j,n)
-		{
-			if(fit[j]==1)
-			{
-				ans+=calc;
-			}
-			calc*=2;
-		}
-		pln(dp1[ans]);
-	}
+	string ans;
+	InfiniteString inf;
+	ans=inf.equal("abab","aba");
+	trace1(ans);
 	return 0;
 }
+
+
+
 
 
 

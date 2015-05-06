@@ -31,7 +31,7 @@ using namespace std;
 #define scan(v,n) vector<int> v;rep(i,n){ int j;si(j);v.pb(j);}
 #define mod (int)(1e9 + 7)
 #define ll long long int
-#define MAX 1000006
+#define MAX 100006
 #define TRACE
 
 #ifdef TRACE
@@ -52,66 +52,83 @@ using namespace std;
 #define trace6(a, b, c, d, e, f)
 
 #endif
+#define gc getchar_unlocked
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
+ll left1[MAX],right1[MAX],left2[MAX],right2[MAX],a[MAX];
 
-ll arr[100][100],dp1[1<<21],dp2[1<<21],fit[21];
+void scanint(ll &x)
+{
+	register ll c = gc();
+	x = 0;
+	ll neg = 0;
+	for(;((c<48 || c>57) && c != '-');c = gc());
+	if(c=='-') {neg=1;c=gc();}
+	for(;c>47 && c<58;c = gc()) {x = (x<<1) + (x<<3) + c - 48;}
+	if(neg) x=-x;
+}
+
 int main()
 {
-	ll t,n,i,j,k,sum,cnt,c,ans,calc,cit;
-	sl(t);
-	trace1(t);
+	ll max_so_far = 0, max_ending_here = 0,i,t,n,sz,ans,curr_max;
+	scanint(t);
+	//sl(t);
 	while(t--)
 	{
-		rep(i,1<<21)
-			dp1[i]=dp2[i]=0;
-		sl(n);
+		scanint(n);
 		rep(i,n)
+			scanint(a[i]);
+		sz=n;
+
+		max_so_far = a[0], curr_max = a[0];
+		left1[0]=max_so_far;
+		for (i = 1; i < sz; i++)
 		{
-			rep(j,n)
-			{
-				sl(arr[i][j]);
-			}
+			curr_max = max(a[i], curr_max+a[i]);
+			max_so_far = max(max_so_far, curr_max);
+			left1[i]=max_so_far;
 		}
+
+		max_so_far = a[sz-1], curr_max = a[sz-1];
+		right2[sz-1]=max_so_far;
+		for (i = sz-2; i >=0 ; i--)
+		{
+			curr_max = max(a[i], curr_max+a[i]);
+			max_so_far = max(max_so_far, curr_max);
+			right2[i]=max_so_far;
+		}
+
 		rep(i,n)
+			a[i]=-a[i];
+		max_so_far = a[0], curr_max = a[0];
+		left2[0]=max_so_far;
+		for (i = 1; i < sz; i++)
 		{
-			rep(j,1<<n)
-				dp2[j]=0;
-			rep(j,n)
-			{
-				if(arr[i][j]==0)
-					continue;
-				fit[j]=1;
-				rep(k,1<<n)
-				{
-					cit=1<<j;
-					calc=k&cit;
-					//trace4(i,j,k,calc);
-					if( calc == 0 )
-					{
-						//trace3(i,j,k);
-						cit=1<<j;
-						calc=k|cit;
-						trace5(i,j,k,cit,calc);
-						dp2[k|(1<<j)]+=1+dp1[k];
-					}
-				}
-			}
-			rep(j,1<<n)
-				dp1[j]=dp2[j];
-			ans=0;calc=1;
-		}	
-		rep(j,n)
-		{
-			if(fit[j]==1)
-			{
-				ans+=calc;
-			}
-			calc*=2;
+			curr_max = max(a[i], curr_max+a[i]);
+			max_so_far = max(max_so_far, curr_max);
+			left2[i]=max_so_far;
 		}
-		pln(dp1[ans]);
+		max_so_far = a[sz-1], curr_max = a[sz-1];
+		right1[sz-1]=max_so_far;
+		for (i = sz-2; i >=0 ; i--)
+		{
+			curr_max = max(a[i], curr_max+a[i]);
+			max_so_far = max(max_so_far, curr_max);
+			right1[i]=max_so_far;
+		}
+		ans=-mod;
+		rep(i,sz-1)
+		{
+			ans=max(ans,left1[i]+right1[i+1]);
+			ans=max(ans,left2[i]+right2[i+1]);
+		}
+		pln(ans);
 	}
 	return 0;
 }
+
+
+
+
 
 
 

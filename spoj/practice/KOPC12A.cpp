@@ -31,7 +31,6 @@ using namespace std;
 #define scan(v,n) vector<int> v;rep(i,n){ int j;si(j);v.pb(j);}
 #define mod (int)(1e9 + 7)
 #define ll long long int
-#define MAX 1000006
 #define TRACE
 
 #ifdef TRACE
@@ -53,65 +52,65 @@ using namespace std;
 
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-
-ll arr[100][100],dp1[1<<21],dp2[1<<21],fit[21];
+ll arr[1000006],cost[1000006];
+ll n,minit,maxit;
+int calc(ll hit)
+{
+	ll ans=0,i,val;
+	rep(i,n)
+	{
+		val=arr[i]-hit;
+		if(val<0)
+			val*=-1;
+		ans+=cost[i]*val;
+	}
+	return ans;
+}
+ll binary()
+{
+	ll low=minit,high=maxit,mid,sz=maxit,c1,c2,c3;
+	while(low<=high)
+	{
+		mid=(low+high)/2;
+		c1=calc(mid-1);
+		c2=calc(mid);
+		c3=calc(mid+1);
+		//trace4(mid,c1,c2,c3);
+		if(c2<c1 && c2<c3)
+			return c2;
+		else if(c2<=c1)
+			low=mid+1;
+		else
+			high=mid-1;
+	}
+	return -1;
+}
 int main()
 {
-	ll t,n,i,j,k,sum,cnt,c,ans,calc,cit;
+	ll t,i,ans;
 	sl(t);
-	trace1(t);
 	while(t--)
 	{
-		rep(i,1<<21)
-			dp1[i]=dp2[i]=0;
 		sl(n);
+		minit=mod;
+		maxit=-1;
 		rep(i,n)
 		{
-			rep(j,n)
-			{
-				sl(arr[i][j]);
-			}
+			sl(arr[i]);
+			minit=min(minit,arr[i]);
+			maxit=max(maxit,arr[i]);
 		}
 		rep(i,n)
-		{
-			rep(j,1<<n)
-				dp2[j]=0;
-			rep(j,n)
-			{
-				if(arr[i][j]==0)
-					continue;
-				fit[j]=1;
-				rep(k,1<<n)
-				{
-					cit=1<<j;
-					calc=k&cit;
-					//trace4(i,j,k,calc);
-					if( calc == 0 )
-					{
-						//trace3(i,j,k);
-						cit=1<<j;
-						calc=k|cit;
-						trace5(i,j,k,cit,calc);
-						dp2[k|(1<<j)]+=1+dp1[k];
-					}
-				}
-			}
-			rep(j,1<<n)
-				dp1[j]=dp2[j];
-			ans=0;calc=1;
-		}	
-		rep(j,n)
-		{
-			if(fit[j]==1)
-			{
-				ans+=calc;
-			}
-			calc*=2;
-		}
-		pln(dp1[ans]);
+			sl(cost[i]);
+		ans=binary();
+		pln(ans);
 	}
 	return 0;
 }
+
+
+
+
 
 
 
