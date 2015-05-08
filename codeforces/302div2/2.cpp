@@ -53,69 +53,58 @@ using namespace std;
 
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-
-ll arr[100][100],dp1[1<<21],dp2[1<<21],fit[21];
+int arr[1001][1001];
 int main()
 {
-	ll t,n,i,j,k,sum,cnt,c,ans,calc,cit;
-	sl(t);
-	trace1(t);
-	while(t--)
+	int n,k,cnt=0,i,j;
+	si(n);
+	si(k);
+	rep(i,n)
+		rep(j,n)
+		arr[i][j]=0;
+	if(k!=0)
 	{
-		rep(i,1<<21)
-			dp1[i]=dp2[i]=0;
-		sl(n);
 		rep(i,n)
 		{
 			rep(j,n)
 			{
-				sl(arr[i][j]);
+				if((i==0 || arr[i-1][j]==0) && (i==n-1 || arr[i+1][j]==0) && (j==0 || arr[i][j-1]==0) && (j==n-1 || arr[i][j+1]==0))
+				{
+					arr[i][j]=1;
+					cnt++;
+				}
+				if(cnt==k)
+					break;
 			}
+			if(cnt==k)
+				break;
 		}
+	}
+	if(cnt!=k)
+	{
+		cout<<"NO\n";
+	}
+	else
+	{
+		cout<<"YES\n";
 		rep(i,n)
 		{
-			rep(j,1<<n)
-				dp2[j]=0;
 			rep(j,n)
 			{
 				if(arr[i][j]==0)
-					continue;
-				fit[j]=1;
-				rep(k,1<<n)
-				{
-					cit=1<<j;
-					calc=k&cit;
-					//trace4(i,j,k,calc);
-					if( calc == 0 )
-					{
-						//trace3(i,j,k);
-						cit=1<<j;
-						calc=k|cit;
-						//trace5(i,j,k,cit,calc);
-						dp2[calc]=max(dp2[calc],1+dp1[k]);
-					}
-				}
+					cout<<"S";
+				else
+					cout<<"L";
 			}
-			rep(j,1<<n)
-			{
-				dp1[j]+=dp2[j];
-				trace3(i,j,dp1[j]);
-			}
-			ans=0;calc=1;
-		}	
-		rep(j,n)
-		{
-			if(fit[j]==1)
-			{
-				ans+=calc;
-			}
-			calc*=2;
+			cout<<endl;
 		}
-		trace1(ans);
-		pln(dp1[ans]);
 	}
 	return 0;
 }
+
+
+
+
 
 
 

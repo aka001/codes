@@ -30,7 +30,7 @@ using namespace std;
 #define ss(n) scanf("%s",n)
 #define scan(v,n) vector<int> v;rep(i,n){ int j;si(j);v.pb(j);}
 #define mod (int)(1e9 + 7)
-#define ll long long int
+#define ll long long
 #define MAX 1000006
 #define TRACE
 
@@ -52,70 +52,70 @@ using namespace std;
 #define trace6(a, b, c, d, e, f)
 
 #endif
-ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
+ll n,m,b,v,arr[501],mem[501][501]={-1};
+//map<pair<int,pair<int,int> >, int> mapit;
+//map<pair<int,int>, int> mapit;
+ll recursion(ll ind, ll val, ll tot)
+{
+	if(tot>m || val<0)
+		return 0;
+	if(ind==n || tot==m)
+	{
+		//trace3(ind,val,tot);
+		if(val>=0 && tot==m)
+			return 1;
+		else
+			return 0;
+	}
+	if(mem[ind][val]!=-1)
+		return mem[ind][val];
 
-ll arr[100][100],dp1[1<<21],dp2[1<<21],fit[21];
+	//if(mapit.find(mp(ind,mp(val,tot)))!=mapit.end())
+		//return mapit[mp(ind,mp(val,tot))];
+
+	/*if(mapit.find(mp(ind,val))!=mapit.end())
+	{
+		trace3(ind,val,tot);
+		return mapit[mp(ind,val)];
+	}*/
+	ll ans=0;int i;
+	if(val<0)
+		ans=0;
+	else
+	{
+		rep(i,m+1)
+		{
+			ans+=recursion(ind+1,val-i*arr[ind],tot+i);
+			ans%=v;
+		}
+	}
+	ans%=v;
+	//mapit[mp(ind,mp(val,tot))]=ans;
+	mem[ind][val]=ans;
+	//mapit[mp(ind,val)]=ans;
+	return ans;
+}
 int main()
 {
-	ll t,n,i,j,k,sum,cnt,c,ans,calc,cit;
-	sl(t);
-	trace1(t);
-	while(t--)
-	{
-		rep(i,1<<21)
-			dp1[i]=dp2[i]=0;
-		sl(n);
-		rep(i,n)
-		{
-			rep(j,n)
-			{
-				sl(arr[i][j]);
-			}
-		}
-		rep(i,n)
-		{
-			rep(j,1<<n)
-				dp2[j]=0;
-			rep(j,n)
-			{
-				if(arr[i][j]==0)
-					continue;
-				fit[j]=1;
-				rep(k,1<<n)
-				{
-					cit=1<<j;
-					calc=k&cit;
-					//trace4(i,j,k,calc);
-					if( calc == 0 )
-					{
-						//trace3(i,j,k);
-						cit=1<<j;
-						calc=k|cit;
-						//trace5(i,j,k,cit,calc);
-						dp2[calc]=max(dp2[calc],1+dp1[k]);
-					}
-				}
-			}
-			rep(j,1<<n)
-			{
-				dp1[j]+=dp2[j];
-				trace3(i,j,dp1[j]);
-			}
-			ans=0;calc=1;
-		}	
-		rep(j,n)
-		{
-			if(fit[j]==1)
-			{
-				ans+=calc;
-			}
-			calc*=2;
-		}
-		trace1(ans);
-		pln(dp1[ans]);
-	}
+	ll ans,i,j;
+	rep(i,501)
+		rep(j,501)
+			mem[i][j]=-1;
+	sl(n);
+	sl(m);
+	sl(b);
+	sl(v);
+	rep(i,n)
+		sl(arr[i]);
+	ans=recursion(0,b,0);
+	//trace1(cnt);
+	pln(ans);
 	return 0;
 }
+
+
+
+
 
 
 
