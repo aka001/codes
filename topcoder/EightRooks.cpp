@@ -1,36 +1,9 @@
 #include<bits/stdc++.h>
 using namespace std;
-class EightRooks 
-{
+class EightRooks {
 	public:
-	string isCorrect(vector <string> board) 
-	{
-		int i,sz,ans=0,cnt=0,colvis[8],rowvis[8],flag=1,j;
-		sz=board.size();
-		for(i=0;i<8;i++)
-		{
-			colvis[i]=rowvis[i]=0;
-		}
-		for(i=0;i<8;i++)
-		{
-			for(j=0;j<8;j++)
-			{
-				if(board[i][j]=='R')
-				{
-					cnt++;
-					if(colvis[j] || rowvis[i])
-					{
-						flag=0;
-						break;
-					}
-					colvis[j]=rowvis[i]=1;
-				}
-			}
-		}
-		if(flag && cnt==8)
-			return "Correct";
-		else
-			return "Incorrect";
+	string isCorrect(vector <string> board) {
+		
 	}
 };
 
@@ -56,7 +29,7 @@ int main(int argc, char* argv[])
 			if (exitCode)
 				cout << "#" << i << ": Runtime Error" << endl;
 		}
-		int T = time(NULL)-1430939626;
+		int T = time(NULL)-1431978064;
 		double PT = T/60.0, TT = 75.0;
 		cout.setf(ios::fixed,ios::floatfield);
 		cout.precision(2);
