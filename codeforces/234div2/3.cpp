@@ -69,47 +69,47 @@ using namespace std;
 #define trace6(a, b, c, d, e, f)
 
 #endif
-#define F first
-#define S second
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;}
-pair<double,double> arr[MAX];
-map<double, ll> mapit;
-vector<double> vec;
+vector<pair<ll,ll> > ans;
 int main()
 {
-	ll n, i, j, sz;
-	double x,y;
-	double num, den, calc;
-	sl(n);
-	rep(i,n)
+	ll n,m,x,y,z,p,a,b,i,a1,b1,tmp,n2,m2;
+	sl(n); sl(m); sl(x); sl(y); sl(z); sl(p);
+	x%=4;
+	y%=2;
+	z%=4;
+	while(p--)
 	{
-		sd(x);
-		sd(y);
-		arr[i]=mp(x,y);
-	}
-	rep(i,n)
-	{
-		FOR(j,i+1,n)
+		n2=n; m2=m;
+		sl(a);
+		sl(b);
+		rep(i,x)
 		{
-			num = arr[j].S-arr[i].S;
-			den = arr[j].F-arr[i].F;
-			if(den==0)
-				calc=mod;
-			else
-			{
-				calc=num/(den*1.0);
-			}
-			vec.pb(calc);
-			mapit[calc]++;
+			a1=b;
+			b1=n-a+1;
+			a=a1;
+			b=b1;
+			tmp=m;
+			m=n;
+			n=tmp;
 		}
+		if(y)
+			b=m-b+1;
+		rep(i,z)
+		{
+			a1=m-b+1;
+			b1=a;
+			a=a1;
+			b=b1;
+			tmp=m;
+			m=n;
+			n=tmp;
+		}
+		printf("%lld %lld\n",a,b);
+		n=n2; m=m2;
 	}
-	sz = vec.size();
-	rep(i,sz)
-		trace2(vec[i], mapit[vec[i]]);
 	return 0;
 }
-
-
 
 
 
