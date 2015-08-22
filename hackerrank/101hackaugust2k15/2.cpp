@@ -31,7 +31,7 @@ using namespace std;
 #define scan(v,n) vector<int> v;rep(i,n){ int j;si(j);v.pb(j);}
 #define mod (int)(1e9 + 7)
 #define ll long long int
-#define MAX 1000006
+#define MAX 100016
 #define TRACE
 
 #ifdef TRACE
@@ -56,118 +56,36 @@ using namespace std;
 #define S second
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
 char ch[MAX];
-vector<pair<int,int> > arr;
-int cnt[MAX],n;
-int upper_bound(int val)
-{
-	int l=0, h=arr.size()-1,mid, sz=arr.size();
-	while(l<=h)
-	{
-		mid=(l+h)/2;
-		if(arr[mid].F==val && (mid==sz-1 || arr[mid+1].F!=val))
-			return mid;
-		else if(arr[mid].F>val)
-			h=mid-1;
-		else
-			l=mid+1;
-	}
-	return sz+1;
-}
-int lower_bound(int val)
-{
-	int l=0, h=arr.size()-1,mid, sz=arr.size();
-	while(l<=h)
-	{
-		mid=(l+h)/2;
-		if(arr[mid].F==val && (mid==0 || arr[mid-1].F!=val))
-			return mid;
-		else if(arr[mid].F>=val)
-			h=mid-1;
-		else
-			l=mid+1;
-	}
-	return sz+1;
-}
-int mix_bound(int val, int lit, int hit)
-{
-	int l=lit, h=hit,mid, sz=hit;
-	while(l<=h)
-	{
-		mid=(l+h)/2;
-		if(arr[mid].S>=val && (mid==l || arr[mid-1].S<val))
-			return mid;
-		else if(arr[mid].S>val)
-			h=mid-1;
-		else
-			l=mid+1;
-	}
-	return n+1;
-}
+queue<int> Q[MAX];
 int main()
 {
-	int k,t,sz,i,val,lit,calc,temp,vit,val2,vik,valera;
-	memset(cnt, 0, sizeof(cnt));
+	int n,k,t,i,temp,pos,calc;
 	si(n); si(k); si(t);
 	ss(ch);
-	sz=strlen(ch);
-	rep(i,sz)
-	{
+	rep(i,n)
 		if(ch[i]=='1')
-		{
-			val=ch[i]-'0';
-			arr.pb(mp(i%k, i));
-		}
-	}
-	lit=arr.size();
-	sort(arr.begin(), arr.end());
-	rep(i,sz)
+			Q[i%k].push(i);
+	rep(i,n)
 	{
 		if(ch[i]=='0')
 		{
-			//trace1(i);
-			val=lower_bound(i%k);
-			val2=upper_bound(i%k);
-			valera=val;
-			val+=cnt[i%k];
-			//trace6(i, val, val2, i%k, cnt[i%k], arr[val2].S);
-			if(val<lit && val<=val2 && val2<sz && arr[val2].S>i && arr[val].F==i%k)
+			while((!(Q[i%k].empty())) && Q[i%k].front()<i)
+				Q[i%k].pop();
+			if(!(Q[i%k].empty()))
 			{
-				vik=mix_bound(i, val, val2);
-				vit=arr[vik].S;
-				//trace1(vit);
-				if(vit>sz)
-					continue;
-				calc=(vit-i)/k;
+				pos=Q[i%k].front();
+				calc = (pos-i)/k;
 				if(t-calc>=0)
 				{
-					cnt[i%k]=vik-valera+1;
-					//trace4(vik, cnt[i%k], valera, vit);
 					t-=calc;
-					//trace1(ch);
 					temp=ch[i];
-					ch[i]=ch[vit];
-					ch[vit]=temp;
-					//trace2(i, vit);
-					//trace1(ch);
+					ch[i]=ch[pos];
+					ch[pos]=temp;
+					Q[i%k].pop();
 				}
-				if(t<=0)
-					break;
 			}
 		}
 	}
 	cout<<ch<<endl;
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
