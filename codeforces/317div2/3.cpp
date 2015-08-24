@@ -53,125 +53,34 @@ using namespace std;
 
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-map<int,int> mapit,pos,freeit;
-vector<ll> arr,brr;
-ll freecount,k,ans=0;
-int stablemarriage()
+ll nC2(ll n)
 {
-	int i,sz,lp,rp,c1,c2,cnt,pref;
-	sz=arr.size();
-	trace1(sz);
-	if(sz%2)
-		sz--;
-	freecount=sz;
-	trace1(sz);
-	while(freecount>0)
+	return (n*(n-1))/2;
+}
+ll nC3(ll n)
+{
+	return (n*(n-1)*(n-2))/6;
+}
+ll bad_triangles(ll a, ll b, ll c, ll l)
+{
+	ll i,bad=0,val;
+	rep(i,l+1)
 	{
-		for(i=0;i<sz;i++)
-			if(freeit[i]==-1)
-				break;
-		cnt=0;
-		lp=i-1;
-		rp=i+1;
-		//trace2(i, freeit[i]);
-		while(cnt<k)
-		{
-			if(lp<0)
-				c1=mod;
-			else
-				c1=abs(arr[i]-arr[lp]);
-			if(rp>=sz)
-				c2=mod;
-			else
-				c2=abs(arr[i]-arr[rp]);
-			if(c1>c2)
-			{
-				pref=rp;
-				rp++;
-			}
-			else
-			{
-				pref=lp;
-				lp++;
-			}
-			if(freeit[pref]==-1)
-			{
-				//trace4(i,freecount,pref,freeit[pref]);
-				k-=2;
-				freeit[pref]=i;
-				freeit[i]=pref;
-				freecount-=2;
-				ans+=abs(arr[pref]-arr[i]);
-				break;
-			}
-			else
-			{
-				c1=abs(arr[pref]-arr[freeit[pref]]);
-				c2=abs(arr[pref]-arr[i]);
-				if(c2<c1)
-				{
-					ans-=abs(arr[pref]-arr[freeit[pref]]);
-					freeit[pref]=i;
-					freeit[i]=pref;
-					ans+=abs(arr[pref]-arr[i]);
-				}
-			}
-			cnt++;
-		}
+		val=min(a-(b+c)+i, l-i);
+		if(val>=0)
+			bad+=nC2(val+2);
 	}
+	return bad;
 }
 int main()
 {
-	ll n,i,sz,val;
-	sl(n); sl(k);
-	rep(i,n)
-	{
-		sl(val);
-		arr.pb(val);
-		mapit[arr[i]]++;
-	}
-	sort(arr.begin(), arr.end());
-	arr.erase( unique( arr.begin(), arr.end() ), arr.end() );
-	sz=arr.size();
-	rep(i,sz)
-	{
-		pos[arr[i]]=i;
-		freeit[i]=-1;
-		if(mapit[arr[i]]>1)
-		{
-			if(mapit[arr[i]]%2==0)
-			{
-				k-=mapit[arr[i]]/2;
-				mapit[arr[i]]=0;
-			}
-			else
-			{
-				k-=(mapit[arr[i]]-1)/2;
-				mapit[arr[i]]=1;
-			}
-		}
-		if(mapit[arr[i]]==1)
-			brr.pb(arr[i]);
-	}
-	sort(brr.begin(), brr.end());
-	brr.erase( unique( brr.begin(), brr.end() ), brr.end() );
-	arr.clear();
-	sz=brr.size();
-	rep(i,sz)
-		arr.pb(brr[i]);
-	sz=arr.size();
-	rep(i,sz)
-	{
-		freeit[i]=-1;
-	}
-	if(k<=0)
-		pin(0);
-	else
-	{
-		freecount=sz;
-		stablemarriage();
-		pln(ans);
-	}
+	ll a,b,c,l,ans=0;
+	sl(a); sl(b); sl(c); sl(l);
+	ans+=nC3(l+3);
+	ans-=bad_triangles(a,b,c,l);
+	ans-=bad_triangles(b,a,c,l);
+	ans-=bad_triangles(c,b,a,l);
+	pln(ans);
 	return 0;
 }
 
