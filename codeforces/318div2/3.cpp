@@ -29,6 +29,8 @@ using namespace std;
 #define sd(n) scanf("%lf",&n)
 #define ss(n) scanf("%s",n)
 #define scan(v,n) vector<int> v;rep(i,n){ int j;si(j);v.pb(j);}
+#define F first
+#define S second
 #define mod (int)(1e9 + 7)
 #define ll long long int
 #define MAX 1000006
@@ -53,129 +55,67 @@ using namespace std;
 
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-char ch[MAX];
-ll cost[1111][2],n,m,x,y,arr[1111][1111];
-<<<<<<< HEAD
-ll dp[1111][1111][2];
-ll ansit[MAX];
-ll solve(ll l, ll cnt, ll cit)
+long long int gcd(long long int a,long long int b)
 {
-	ll &ret = dp[l][cnt][cit];
-	if(ret!=-1)
-		return ret;
-	if(l==m && cnt>=x && cnt<=y)
+	long long int c;
+	while(a!=0)
 	{
-		ret = 0;
-		return 0;
+		c = a;
+		a = b%a;
+		b = c;
 	}
-	else if(l==m || cnt>y)
-	{
-		ret=mod;
-		return mod;
-	}
-	else
-	{
-		ll l1,l2,c0,c1,r1,r2;
-		c0=c1=1;
-		if(cit==0)
-			c0=cnt+1;
-		else
-			c1=cnt+1;	
-		l1=solve(l+1, c0, 0);
-		l2=solve(l+1, c1, 1);
-		r1=cost[l][0]+l1;
-		r2=cost[l][1]+l2;
-		if(r1<r2)
-			ansit[l]=0;
-		else
-			ansit[l]=1;
-		//if(l==2 && cit==1 && cnt==2)
-		//	trace5(l, c0, c1, l1, l2);
-		ret = min(r1,r2);
-=======
-int dp[2111][2111][2];
-int solve(ll l, ll cnt, ll cit)
-{
-	int &ret=dp[l][cnt][cit];
-	if(cit!=-1 && ret!=-1)
-		return ret;
-	else if(l==m)
-	{
-		ret=0;
-		return ret;
-	}
-	else if(l>m)
-	{
-		ret=mod;
-		return ret;
-	}
-	else
-	{
-		int i,val1,val2,v1,v2;
-		ret=mod;
-		FOR(i,x,y+1)
-		{
-			if(cit!=0)
-			{
-				val1=cost[l+i-1][0];
-				if(l!=0)
-					val1-=cost[l-1][0];
-				v1=solve(l+i, cnt, 0);
-				ret=min(ret, val1+v1);
-			}
-			if(cit!=1)
-			{
-				val2=cost[l+i-1][1];
-				if(l!=0)
-					val2-=cost[l-1][1];
-				v2=solve(l+i, cnt, 1);
-				ret=min(ret, val2+v2);
-			}
-		}
->>>>>>> daceb8cd885e259070ec9398cfc5a3663abc2159
-		return ret;
-	}
+	return b;
 }
+vector<ll> primeit;
+ll isprime[MAX];
+void seive()
+{
+	ll i,j;
+	FOR(i,2,MAX)
+	{
+		if(isprime[i]==0)
+		{
+			j=i*i;
+			for(;j<MAX;j+=i)
+				isprime[i]=1;
+		}
+	}
+	FOR(i,2,MAX)
+		if(isprime[i]==0)
+			primeit.pb(i);
+}
+ll arr[MAX];
 int main()
 {
-	ll i,j,k,c0,c1,ans;
-	sl(n); sl(m); sl(x); sl(y);
-	memset(dp, -1, sizeof(dp));
-<<<<<<< HEAD
-	rep(i,1111)
-		rep(j,1111)
-		rep(k,2)
-		dp[i][j][k]=-1;
-=======
->>>>>>> daceb8cd885e259070ec9398cfc5a3663abc2159
+	ll n,i,val,calc,cnt,flag;
+	sl(n);
+	seive();
+	rep(i,n)
+		sl(arr[i]);
+	val = gcd(arr[0], arr[1]);
+	FOR(i,2,n)
+	{
+		val=gcd(val, arr[i]);
+	}
+	trace1(val);
 	rep(i,n)
 	{
-		ss(ch);
-		c0=c1=0;
-		rep(j,m)
+		arr[i]/=val;
+		calc=sqrt(arr[i]);
+		cnt=2;
+		flag=1;
+		while(arr[i]%2==0)
+			arr[i]/=2;
+		while(arr[i]%3==0)
+			arr[i]/=3;
+		//trace2(i, arr[i]);
+		if(arr[i]!=1)
 		{
-			if(ch[j]=='#')
-				arr[i][j]=1;
-			else
-				arr[i][j]=0;
+			printf("No\n");
+			return 0;
 		}
 	}
-	rep(i,m)
-	{
-		c0=c1=0;
-		rep(j,n)
-		{
-			if(arr[j][i]==0)
-				c1++;
-			else
-				c0++;
-		}
-		cost[i][0]=c0; cost[i][1]=c1;
-<<<<<<< HEAD
-		//trace3(i, cost[i][0], cost[i][1]);
-	}
-	ans=solve(0,0,0);
-	pln(ans);
+	printf("Yes\n");
 	return 0;
 }
 
@@ -191,13 +131,3 @@ int main()
 
 
 
-=======
-	}
-	FOR(i,1,m)
-		rep(j,2)
-			cost[i][j]+=cost[i-1][j];
-	ans=solve(0,0,-1);
-	pln(ans);
-	return 0;
-}
->>>>>>> daceb8cd885e259070ec9398cfc5a3663abc2159

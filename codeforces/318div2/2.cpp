@@ -29,6 +29,8 @@ using namespace std;
 #define sd(n) scanf("%lf",&n)
 #define ss(n) scanf("%s",n)
 #define scan(v,n) vector<int> v;rep(i,n){ int j;si(j);v.pb(j);}
+#define F first
+#define S second
 #define mod (int)(1e9 + 7)
 #define ll long long int
 #define MAX 1000006
@@ -53,128 +55,44 @@ using namespace std;
 
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-char ch[MAX];
-ll cost[1111][2],n,m,x,y,arr[1111][1111];
-<<<<<<< HEAD
-ll dp[1111][1111][2];
-ll ansit[MAX];
-ll solve(ll l, ll cnt, ll cit)
-{
-	ll &ret = dp[l][cnt][cit];
-	if(ret!=-1)
-		return ret;
-	if(l==m && cnt>=x && cnt<=y)
-	{
-		ret = 0;
-		return 0;
-	}
-	else if(l==m || cnt>y)
-	{
-		ret=mod;
-		return mod;
-	}
-	else
-	{
-		ll l1,l2,c0,c1,r1,r2;
-		c0=c1=1;
-		if(cit==0)
-			c0=cnt+1;
-		else
-			c1=cnt+1;	
-		l1=solve(l+1, c0, 0);
-		l2=solve(l+1, c1, 1);
-		r1=cost[l][0]+l1;
-		r2=cost[l][1]+l2;
-		if(r1<r2)
-			ansit[l]=0;
-		else
-			ansit[l]=1;
-		//if(l==2 && cit==1 && cnt==2)
-		//	trace5(l, c0, c1, l1, l2);
-		ret = min(r1,r2);
-=======
-int dp[2111][2111][2];
-int solve(ll l, ll cnt, ll cit)
-{
-	int &ret=dp[l][cnt][cit];
-	if(cit!=-1 && ret!=-1)
-		return ret;
-	else if(l==m)
-	{
-		ret=0;
-		return ret;
-	}
-	else if(l>m)
-	{
-		ret=mod;
-		return ret;
-	}
-	else
-	{
-		int i,val1,val2,v1,v2;
-		ret=mod;
-		FOR(i,x,y+1)
-		{
-			if(cit!=0)
-			{
-				val1=cost[l+i-1][0];
-				if(l!=0)
-					val1-=cost[l-1][0];
-				v1=solve(l+i, cnt, 0);
-				ret=min(ret, val1+v1);
-			}
-			if(cit!=1)
-			{
-				val2=cost[l+i-1][1];
-				if(l!=0)
-					val2-=cost[l-1][1];
-				v2=solve(l+i, cnt, 1);
-				ret=min(ret, val2+v2);
-			}
-		}
->>>>>>> daceb8cd885e259070ec9398cfc5a3663abc2159
-		return ret;
-	}
-}
+vector<ll> arr[4111];
+vector<pair<ll, ll> > edges;
+ll countit[4111], ans=mod;
+
 int main()
 {
-	ll i,j,k,c0,c1,ans;
-	sl(n); sl(m); sl(x); sl(y);
-	memset(dp, -1, sizeof(dp));
-<<<<<<< HEAD
-	rep(i,1111)
-		rep(j,1111)
-		rep(k,2)
-		dp[i][j][k]=-1;
-=======
->>>>>>> daceb8cd885e259070ec9398cfc5a3663abc2159
-	rep(i,n)
+	ll n,m,i,val,v1,v2,j,sz;
+	sl(n); sl(m);
+	rep(i,m)
 	{
-		ss(ch);
-		c0=c1=0;
-		rep(j,m)
-		{
-			if(ch[j]=='#')
-				arr[i][j]=1;
-			else
-				arr[i][j]=0;
-		}
+		sl(v1); sl(v2);
+		edges.pb(mp(v1,v2));
+		arr[v1].pb(v2);
+		arr[v2].pb(v1);
 	}
 	rep(i,m)
 	{
-		c0=c1=0;
-		rep(j,n)
+		memset(countit, 0, sizeof(countit));
+		v1=edges[i].F;
+		v2=edges[i].S;
+		sz=arr[v1].size();
+		rep(j,sz)
+			countit[arr[v1][j]]++;
+		sz=arr[v2].size();
+		rep(j,sz)
+			countit[arr[v2][j]]++;
+		val = arr[v1].size() + arr[v2].size();
+		FOR(j,1,4111)
 		{
-			if(arr[j][i]==0)
-				c1++;
-			else
-				c0++;
+			if(countit[j]==2 && j!=v1 && j!=v2)
+			{
+				if(ans > val+arr[j].size() - 6)
+					ans = val+arr[j].size()-6;
+			}
 		}
-		cost[i][0]=c0; cost[i][1]=c1;
-<<<<<<< HEAD
-		//trace3(i, cost[i][0], cost[i][1]);
 	}
-	ans=solve(0,0,0);
+	if(ans==mod)
+		ans=-1;
 	pln(ans);
 	return 0;
 }
@@ -191,13 +109,3 @@ int main()
 
 
 
-=======
-	}
-	FOR(i,1,m)
-		rep(j,2)
-			cost[i][j]+=cost[i-1][j];
-	ans=solve(0,0,-1);
-	pln(ans);
-	return 0;
-}
->>>>>>> daceb8cd885e259070ec9398cfc5a3663abc2159

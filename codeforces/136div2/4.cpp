@@ -52,130 +52,109 @@ using namespace std;
 #define trace6(a, b, c, d, e, f)
 
 #endif
+#define F first
+#define S second
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-char ch[MAX];
-ll cost[1111][2],n,m,x,y,arr[1111][1111];
-<<<<<<< HEAD
-ll dp[1111][1111][2];
-ll ansit[MAX];
-ll solve(ll l, ll cnt, ll cit)
+map<int,int> mapit;
+vector<pair<int, pair<int,pair<int,int> > > > query;
+vector<int> arr,brr,crr;
+int countit[MAX],n,currentL, currentR,ans=0,ansit[MAX];
+void initial_computation()
 {
-	ll &ret = dp[l][cnt][cit];
-	if(ret!=-1)
-		return ret;
-	if(l==m && cnt>=x && cnt<=y)
+	int i;
+	rep(i,n)
 	{
-		ret = 0;
-		return 0;
+		countit[arr[i]]++;
+		if(countit[arr[i]]==crr[i]+1)
+			ans--;
+		else if(countit[arr[i]]==crr[i])
+			ans++;
 	}
-	else if(l==m || cnt>y)
-	{
-		ret=mod;
-		return mod;
-	}
-	else
-	{
-		ll l1,l2,c0,c1,r1,r2;
-		c0=c1=1;
-		if(cit==0)
-			c0=cnt+1;
-		else
-			c1=cnt+1;	
-		l1=solve(l+1, c0, 0);
-		l2=solve(l+1, c1, 1);
-		r1=cost[l][0]+l1;
-		r2=cost[l][1]+l2;
-		if(r1<r2)
-			ansit[l]=0;
-		else
-			ansit[l]=1;
-		//if(l==2 && cit==1 && cnt==2)
-		//	trace5(l, c0, c1, l1, l2);
-		ret = min(r1,r2);
-=======
-int dp[2111][2111][2];
-int solve(ll l, ll cnt, ll cit)
+	currentL=0;
+	currentR=n-1;
+}
+void compute(int l, int r)
 {
-	int &ret=dp[l][cnt][cit];
-	if(cit!=-1 && ret!=-1)
-		return ret;
-	else if(l==m)
+	while(currentL<l)
 	{
-		ret=0;
-		return ret;
+		countit[arr[currentL]]--;
+		if(countit[arr[currentL]]==crr[currentL])
+			ans++;
+		if(countit[arr[currentL]]==crr[currentL]-1)
+			ans--;
+		currentL++;
 	}
-	else if(l>m)
+	while(currentL>l)
 	{
-		ret=mod;
-		return ret;
+		countit[arr[currentL-1]]++;
+		if(countit[arr[currentL-1]]==crr[currentL-1])
+			ans++;
+		if(countit[arr[currentL-1]]==crr[currentL-1]+1)
+			ans--;
+		currentL--;
 	}
-	else
+	while(currentR<r)
 	{
-		int i,val1,val2,v1,v2;
-		ret=mod;
-		FOR(i,x,y+1)
-		{
-			if(cit!=0)
-			{
-				val1=cost[l+i-1][0];
-				if(l!=0)
-					val1-=cost[l-1][0];
-				v1=solve(l+i, cnt, 0);
-				ret=min(ret, val1+v1);
-			}
-			if(cit!=1)
-			{
-				val2=cost[l+i-1][1];
-				if(l!=0)
-					val2-=cost[l-1][1];
-				v2=solve(l+i, cnt, 1);
-				ret=min(ret, val2+v2);
-			}
-		}
->>>>>>> daceb8cd885e259070ec9398cfc5a3663abc2159
-		return ret;
+		countit[arr[currentR+1]]++;
+		if(countit[arr[currentR+1]]==crr[currentR+1])
+			ans++;
+		if(countit[arr[currentR+1]]==crr[currentR+1]+1)
+			ans--;
+		currentR++;
+	}
+	while(currentR>r)
+	{
+		countit[arr[currentR]]--;
+		if(countit[arr[currentR]]==crr[currentR])
+			ans++;
+		if(countit[arr[currentR]]==crr[currentR]-1)
+			ans--;
+		currentR--;
 	}
 }
 int main()
 {
-	ll i,j,k,c0,c1,ans;
-	sl(n); sl(m); sl(x); sl(y);
-	memset(dp, -1, sizeof(dp));
-<<<<<<< HEAD
-	rep(i,1111)
-		rep(j,1111)
-		rep(k,2)
-		dp[i][j][k]=-1;
-=======
->>>>>>> daceb8cd885e259070ec9398cfc5a3663abc2159
+	int m,i,val,cnt=1,bsz,l,r;
+	si(n); si(m);
 	rep(i,n)
 	{
-		ss(ch);
-		c0=c1=0;
-		rep(j,m)
+		si(val);
+		arr.pb(val);
+		brr.pb(val);
+		crr.pb(val);
+	}
+	bsz=sqrt(n);
+	rep(i,m)
+	{
+		si(l);
+		si(r);
+		query.pb(mp(l/bsz, mp(i, mp(l, r))));
+	}
+	sort(query.begin(), query.end());
+	sort(brr.begin(), brr.end());
+	rep(i,n)
+	{
+		if(mapit.find(brr[i])==mapit.end())
 		{
-			if(ch[j]=='#')
-				arr[i][j]=1;
-			else
-				arr[i][j]=0;
+			mapit[brr[i]]=cnt++;
 		}
+	}
+	rep(i,n)
+	{
+		arr[i]=mapit[arr[i]];
+	}
+	initial_computation();
+	pair<int, pair<int,int> > temp;
+	rep(i, m)
+	{
+		temp=query[i].S;
+		compute(temp.S.F-1, temp.S.S-1);
+		ansit[temp.F]=ans;
 	}
 	rep(i,m)
 	{
-		c0=c1=0;
-		rep(j,n)
-		{
-			if(arr[j][i]==0)
-				c1++;
-			else
-				c0++;
-		}
-		cost[i][0]=c0; cost[i][1]=c1;
-<<<<<<< HEAD
-		//trace3(i, cost[i][0], cost[i][1]);
+		pin(ansit[i]);
 	}
-	ans=solve(0,0,0);
-	pln(ans);
 	return 0;
 }
 
@@ -191,13 +170,3 @@ int main()
 
 
 
-=======
-	}
-	FOR(i,1,m)
-		rep(j,2)
-			cost[i][j]+=cost[i-1][j];
-	ans=solve(0,0,-1);
-	pln(ans);
-	return 0;
-}
->>>>>>> daceb8cd885e259070ec9398cfc5a3663abc2159
