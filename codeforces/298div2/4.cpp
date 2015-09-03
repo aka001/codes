@@ -52,77 +52,55 @@ using namespace std;
 #define trace6(a, b, c, d, e, f)
 
 #endif
-#define F first
-#define S second
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-vector<pair<int,int> > vec[3];
-int arr[MAX],cnt[3],fin[MAX];
+int arr[MAX],ans[MAX];
+multiset<int> brr[3];
+set<int> pos[200009];
+int findinset(int val)
+{
+	int v=val%3;
+	if(brr[v].empty())
+		return -1;
+	set<int>::iterator it;
+	it=brr[v].upper_bound(val);
+	if(it==brr[v].begin())
+		return -1;
+	it--;
+	brr[v].erase(it);
+	return *it;
+}
 int main()
 {
-	int n,i,flag,v1,v0;
+	int n,i,ansit=-1,val;
 	si(n);
 	rep(i,n)
 	{
 		si(arr[i]);
-		vec[arr[i]%3].pb(mp(arr[i],i));
-		//trace2(arr[i], arr[i]%3);
+		brr[arr[i]%3].insert(arr[i]);
+		pos[arr[i]].insert(i);
 	}
-	rep(i,3)
-		sort(vec[i].begin(), vec[i].end());
-	//trace2(vec[0][0].F, vec[0][1].F);
-	//trace2(vec[0][0].S, vec[0][1].S);
-	//trace1(vec[0].size());
-	flag=1;
 	rep(i,n)
 	{
-		if(cnt[i%3]>=vec[i%3].size())
+		ansit++;
+		val = findinset(ansit);
+		ansit=val;
+		if(val==-1)
 		{
-			flag=0;
-			break;
+			printf("Impossible\n");
+			return 0;
 		}
-		fin[i]=vec[i%3][cnt[i%3]].S;
-		cnt[i%3]++;
-		trace3(cnt[i%3], i, fin[i]+1);
+		ans[i]=val;
 	}
-	if(flag)
-	FOR(i,1,n)
+	printf("Possible\n");
+	rep(i,n)
 	{
-		v1=arr[fin[i]];
-		v0=arr[fin[i-1]];
-		trace2(v1, v0);
-		if(!(v1<=v0+1 && v1%3==(v0+1)%3))
-		{
-			trace1("hie");
-			flag=0;
-			break;
-		}
+		val=*pos[ans[i]].begin();
+		pos[ans[i]].erase(pos[ans[i]].begin());
+		cout<<val+1;
+		if(i!=n-1)
+			cout<<" ";
+		else
+			cout<<endl;
 	}
-	if(flag)
-	{
-		printf("Possible\n");
-		rep(i,n)
-		{
-			cout<<fin[i]+1;
-			if(i!=n-1)
-				cout<<" ";
-			else
-				cout<<endl;
-		}
-	}
-	else
-		printf("Impossible\n");
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
