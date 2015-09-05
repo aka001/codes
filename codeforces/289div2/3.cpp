@@ -53,42 +53,64 @@ using namespace std;
 
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-int cnt[MAX], visited[MAX], arr[MAX];
+int ch[333][777], cnt[333], arr[MAX];
 int main()
 {
-	int n,i,v,off,temp,ans=mod,val,n1;
+	int n,i,j,val,vit,sz,x,vit1,k,flag,mit=700,vin;
 	si(n);
-	n1=n;
-	while(n--)
+	FOR(i,1,n+1)
+		si(arr[i]);
+	arr[0]=0; cnt[0]=0;
+	FOR(i,1,n+1)
 	{
-		si(val);
-		off=0;
-		while(val!=0)
+		vit=arr[i];
+		sz=arr[i-1];
+		rep(j,sz)
+			ch[i][j]=ch[i-1][j];
+		rep(j,mit)
 		{
-			v=val;
-			temp=0;
-			while(v<MAX)
+			vit1=vit; val=0;
+			rep(k,mit)
+				ch[i][k]=ch[i-1][k];
+			if(ch[i][j]==9)
+				continue;
+			ch[i][j]++;
+			rep(k,j)
+				ch[i][k]=0;
+			rep(k,mit)
+				val+=ch[i][k];
+			vit1-=val;
+			if(vit1<0)
+				continue;
+			rep(k,mit)
 			{
-				visited[v]++;
-				cnt[v]+=off+temp;
-				v*=2;
-				temp++;
+				vin=ch[i][k];
+				ch[i][k]=max(ch[i][k], min(9, ch[i][k]+vit1));
+				vit1-=min(9-vin, ch[i][k]-vin);
+				if(vit1<=0)
+					break;
 			}
-			while(val!=0 && val%2==0)
+			if(vit1==0)
 			{
-				val/=2;
-				visited[val]++;
-				off++;
-				cnt[val]+=off;
+				cnt[i]=k;
+				break;
 			}
-			val/=2;
-			off++;
+			else
+				continue;
 		}
 	}
-	rep(i,MAX)
-		if(visited[i]==n1)
-			ans=min(ans, cnt[i]);
-	pin(ans);
+	FOR(i,1,n+1)
+	{
+		flag=0;
+		for(j=mit; j>=0; j--)
+		{
+			if(ch[i][j]!=0)
+				flag=1;
+			if(flag)
+				printf("%d",ch[i][j]);
+		}
+		printf("\n");
+	}
 	return 0;
 }
 
