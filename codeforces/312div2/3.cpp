@@ -53,73 +53,42 @@ using namespace std;
 
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-int n,cnt[MAX],arr[MAX];
-int findval(int flag)
-{
-	int i,ans=0,calc,cit=0,val;
-	set<int> stit;
-	memset(cnt, 0 ,sizeof(cnt));
-	rep(i,n)
-	{
-		stit.insert(arr[i]);
-		cnt[arr[i]]++;
-	}
-	trace1(stit.size());
-	while(cit++<=10)
-	//while(!(stit.empty()))
-	{
-		calc=*stit.rbegin();
-		stit.erase(stit.find(calc));
-		if(cnt[calc]==n)
-		{
-			break;
-		}
-		trace3(calc, cnt[calc], stit.size());
-		val=cnt[calc];
-		ans+=val;
-		cnt[calc]=0;
-		calc/=2;
-		cnt[calc]+=val;
-		stit.insert(calc);
-	}
-	return ans;
-}
-ll akash[MAX];
+int cnt[MAX], visited[MAX], arr[MAX];
 int main()
 {
-	int i,calc,val,cit;
-	ll ans;
+	int n,i,v,off,temp,ans=mod,val,n1;
 	si(n);
-	rep(i,n)
+	n1=n;
+	while(n--)
 	{
-		si(arr[i]);
-		val=arr[i]; cit=0;
+		si(val);
+		off=0;
 		while(val!=0)
 		{
-			akash[val]+=cit;
-			cit++;
-			cnt[val]++;
+			v=val;
+			temp=0;
+			while(v<MAX)
+			{
+				visited[v]++;
+				cnt[v]+=off+temp;
+				v*=2;
+				temp++;
+			}
+			while(val!=0 && val%2==0)
+			{
+				val/=2;
+				visited[val]++;
+				off++;
+				cnt[val]+=off;
+			}
 			val/=2;
+			off++;
 		}
-		val=arr[i]*2; cit=0;
-		while(val<=MAX)
-		{
-			cnt[val]++;
-			cit++;
-			akash[val]+=cit;
-			val*=2;
-		}
-		//trace2(i, cnt[4]);
 	}
-	ans=mod;
-	//trace1(cnt[4]);
 	rep(i,MAX)
-	{
-		if(cnt[i]==n)
-			ans=min(ans, akash[i]);
-	}
-	assert(ans!=mod);
-	pln(ans);
+		if(visited[i]==n1)
+			ans=min(ans, cnt[i]);
+	pin(ans);
 	return 0;
 }
 
