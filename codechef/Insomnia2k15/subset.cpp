@@ -25,7 +25,7 @@ using namespace std;
 #define pin(n) printf("%d\n",n)
 #define pln(n) printf("%lld\n",n)
 #define pl(n) printf("%lld ",n)
-#define sl(n) scanf("%d",&n)
+#define sl(n) scanf("%lld",&n)
 #define sd(n) scanf("%lf",&n)
 #define ss(n) scanf("%s",n)
 #define scan(v,n) vector<int> v;rep(i,n){ int j;si(j);v.pb(j);}
@@ -57,8 +57,8 @@ using namespace std;
 #endif
 //Can be implemented in a better way. For reference: https://www.codechef.com/viewplaintext/8048464
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-int isprime[MAX], arr[MAX], cntit[MAXIT];
-vector<int> primeit, fin, solved[9];
+ll isprime[MAX], arr[MAX], cntit[MAXIT];
+vector<ll> primeit, fin, solved[20];
 void seive()
 {
 	ll i,j;
@@ -78,10 +78,35 @@ void seive()
 	}
 }
 int a1[MAXIT], a2[MAXIT];
+vector<pair<int,int> > generate(vector<int> ait)
+{
+	int cnt,i=0,calc,it,i1,sz,ans;
+	sz=ait.size();
+	calc=1<<sz;
+	vector<pair<int,int> > toret;
+	while(i<calc)
+	{
+		i1=i;
+		it=cnt=ans=0;
+		while(i1!=0)
+		{
+			if(i1&01)
+			{
+				ans+=ait[it];
+				cnt++;
+			}
+			it++;
+			i1>>=1;
+		}
+		toret.pb(mp(cnt, ans));
+		i++;
+	}
+	return toret;
+}
 int main()
 {
 	seive();
-	int n,i, sz,calc,val,j,sqit,k,a,b,ans=0,j1,cnt,v,h1,off,up,l,ind1,v1,v11;
+	ll n,i,j,sz,calc,val,sqit,b,h,k,a,ans,ssz,add;
 	ll finans=0;
 	sl(n);
 	sl(k); sl(a); sl(b);
@@ -106,61 +131,32 @@ int main()
 		fin.pb(calc);
 	}
 	sz=fin.size();
-	h1=sz/2;
-	FOR(i,0,h1+1)
+	h=sz/2;
+	vector<int> v1,v2;
+	vector<pair<int,int> > vit1, vit2;
+	rep(i,h)
+		v1.pb(fin[i]);
+	FOR(i,h,sz)
+		v2.pb(fin[i]);
+	vit1=generate(v1); vit2=generate(v2);
+	sz=vit1.size();
+	rep(i,sz)
 	{
-		calc=1<<h1;
-		memset(cntit, 0 ,sizeof(cntit));
-		FOR(j,0,calc)
+		solved[vit1[i].F].pb(vit1[i].S);
+	}
+	rep(i,20)
+		sort(ALL(solved[i]));
+	sz=vit2.size();
+	ans=0;
+	rep(i,sz)
+	{
+		ssz=vit2[i].F;
+		rep(j,k-ssz+1)
 		{
-			ans=0; cnt=0; v=0;
-			j1=j;
-			while(j1!=0)
-			{
-				if(j1%2==1)
-				{
-					ans+=fin[cnt];
-					v++;
-				}
-				cnt++;
-				j1/=2;
-			}
-			if(v==i)
-			{
-				solved[i].pb(ans);
-			}
+			add=(upper_bound(ALL(solved[j]), b-vit2[i].S)-lower_bound(ALL(solved[j]), a-vit2[i].S));
+			ans+=add;
 		}
-		sort(solved[i].begin(), solved[i].end());
 	}
-	off=h1;
-	h1=n-h1;
-	FOR(i,0,h1+1)
-	{
-		calc=1<<h1;
-		FOR(j,0,calc)
-		{
-			ans=0; cnt=0; v=0;
-			j1=j;
-			while(j1!=0)
-			{
-				if(j1%2==1)
-				{
-					ans+=fin[cnt+off];
-					v++;
-				}
-				cnt++;
-				j1/=2;
-			}
-			if(v==i)
-			{
-				up=k-i;
-				FOR(l, 0, up+1)
-				{
-					finans+=upper_bound(ALL(solved[l]), b-ans) - lower_bound(ALL(solved[l]), a-ans);
-				}
-			}
-		}	
-	}
-	pln(finans);
+	pln(ans);
 	return 0;
 }
