@@ -29,7 +29,9 @@ using namespace std;
 #define sd(n) scanf("%lf",&n)
 #define ss(n) scanf("%s",n)
 #define scan(v,n) vector<int> v;rep(i,n){ int j;si(j);v.pb(j);}
-#define mod (int)(1e9 + 7)
+#define F first
+#define S second
+#define mod (ll)(1e9 + 7)
 #define ll long long int
 #define MAX 1000006
 #define TRACE
@@ -53,43 +55,39 @@ using namespace std;
 
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-char c1[MAX], c2[MAX];
-ll seg1[MAX], seg2[MAX];
-ll initialize(ll seg[],char ch[],ll node, ll a, ll b)
+string ch1,ch2;
+string make_string(string s)
 {
-	if(a==b)
-	{
-		seg[node]=ch[a];
-		return seg[node];
-	}
-	ll v1,v2,lit;
-	v1=initialize(seg, ch, 2*node, a, (a+b)/2);
-	v2=initialize(seg, ch, 2*node+1, (a+b)/2+1, b);
-	lit=b-a+1;
-	seg[node]=v1+modpow(26, lit/2, mod)*v2;
-	seg[node]%=mod;
-	return seg[node];
-}
-int initialize(ll node, ll a, ll b)
-{
-	if(a==b)
-	{
-		return 1;
-	}
+	int lit=s.length();
+	if(lit%2==1)
+		return s;
 	else
 	{
-		ll v1, v2;
-		v11=seg1[2*node]; v12=seg1[2*node+1];
-		v21=seg2[2*node]; v22=seg2[2*node+1];
+
+		string v1=make_string(s.substr(0,lit/2)); 
+		string v2=make_string(s.substr(lit/2, (lit-lit/2)));
+		if(v1<v2)
+			return v1+v2;
+		else
+			return v2+v1;
 	}
 }
 int main()
 {
-	ll l;
-	ss(c1); ss(c2);
-	l=strlen(c1);
-	initialize(seg1, c1, 1, 0, l-1);
-	initialize(seg2, c2, 1, 0, l-1);
+	int lit;
+	cin>>ch1>>ch2;
+	lit=ch1.size();
+	ch1=make_string(ch1);
+
+	lit=ch2.size();
+	ch2=make_string(ch2);
+
+	//trace2(ch1, ch2);
+
+	if(ch1==ch2)
+		printf("YES\n");
+	else
+		printf("NO\n");
 	return 0;
 }
 
