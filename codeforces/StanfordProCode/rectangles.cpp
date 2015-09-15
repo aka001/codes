@@ -112,11 +112,7 @@ int main()
 			cit=*sit.begin();
 			sit.erase(sit.begin());
 			aka=mit[cit];
-			if(aka>=2)
-			{
-				//trace2(cit.F, cit.S);
-				ans++;
-			}
+			ans+=(aka*(aka-1))/2;
 		}
 	}
 	pln(ans);
