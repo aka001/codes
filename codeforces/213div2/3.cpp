@@ -33,7 +33,7 @@ using namespace std;
 #define S second
 #define mod (ll)(1e9 + 7)
 #define ll long long int
-#define MAX 4005
+#define MAX 1000006
 #define TRACE
 
 #ifdef TRACE
@@ -55,40 +55,38 @@ using namespace std;
 
 #endif
 ll modpow(ll a,ll n,ll temp){ll res=1,y=a;while(n>0){if(n&1)res=(res*y)%temp;y=(y*y)%temp;n/=2;}return res%temp;} 
-int arr[MAX][MAX], cum[MAX][MAX], val[MAX];
 char ch[MAX];
-map<int,int> mapit;
+ll val[MAX];
+map<ll, ll> mapit;
 int main()
 {
-	int i,n,sum=0,j,p;
-	ll ans=0;
-	si(p);
+	ll a,i,j,ans=0,sz,sum;
+	sl(a);
 	ss(ch);
-	n=strlen(ch);
-	FOR(i,1,n+1)
-		val[i]=ch[i-1]-'0';
-	FOR(i,1,n+1)
-		FOR(j,1,n+1)
-			arr[i][j]=val[i]*val[j];
-	FOR(i,1,n+1)
+	sz=strlen(ch);
+	rep(i,sz)
+		val[i]=ch[i]-'0';
+	rep(i,sz)
 	{
-		FOR(j,1,n+1)
+		sum=0;
+		FOR(j,i,sz)
 		{
-			cum[i][j]=cum[i-1][j]+cum[i][j-1]-cum[i-1][j-1]+arr[i][j];
-			cout<<cum[i][j]<<" ";
-			mapit[cum[i][j]]++;
+			sum+=val[j];
+			mapit[sum]++;
 		}
-		cout<<endl;
 	}
-	ans+=mapit[p];
-	trace1(ans);
-	FOR(i,1,n+1)
+	rep(i,sz)
 	{
-		FOR(j,1,n+1)
+		sum=0;
+		FOR(j,i,sz)
 		{
-			//sum = cum[i-1][n]+cum[n][j-1]-cum[i-1][j-1];
-			ans+=mapit[cum[i][j]+p];
-			trace3(i,j,ans);
+			sum+=val[j];
+			if(a==0 && sum==0)
+			{
+				ans+=(sz*(sz+1))/2;
+			}
+			else if(sum!=0 && a%sum==0)
+				ans+=mapit[a/sum];
 		}
 	}
 	pln(ans);
